@@ -12,7 +12,9 @@ set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK "${CMAKE_COMMAND} -E time")
 add_executable(${PROJECT_NAME} ${SOURCES}
         src/main.cpp
         include/server.h
-        include/server.h)
+        include/scanner.h
+        include/json.hpp
+        src/scanner.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
