@@ -10,5 +10,6 @@ pkgs.mkShell {
     gdb
     clang-tools
     perf
+    curl
   ];
 }
