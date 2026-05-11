@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME} ${SOURCES}
         include/server.h
         include/scanner.h
         include/json.hpp
+        include/httplib.h
         src/scanner.cpp
         src/server.cpp)
 
