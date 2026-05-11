@@ -14,7 +14,8 @@ add_executable(${PROJECT_NAME} ${SOURCES}
         include/server.h
         include/scanner.h
         include/json.hpp
-        src/scanner.cpp)
+        src/scanner.cpp
+        src/server.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
