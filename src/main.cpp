@@ -22,7 +22,10 @@ fsindexer_worker (MediaServer &server, const std::filesystem::path &path,
                            { "video", res.videoFiles },
                            { "images", res.imageFiles } };
 
-      server.setData (j.dump ());
+      /* Во время тестов было выявлена проблема с парсом названия файлов в
+       * ломанной кодировке */
+      server.setData (
+          j.dump (-1, ' ', false, nlohmann::json::error_handler_t::replace));
       std::this_thread::sleep_for (std::chrono::seconds (interval));
     }
 }
