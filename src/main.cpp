@@ -6,6 +6,9 @@
 #include "scanner.h"
 #include "server.h"
 #include <getopt.h>
+#include <thread>
+#include <chrono>
+#include <iostream>
 #include <pwd.h>
 #include <unistd.h>
 
@@ -14,6 +17,8 @@ fsindexer_worker (MediaServer &server, const std::filesystem::path &path,
                   int32_t interval)
 {
   FsIndexer indexer;
+
+  server.setData (R"({"audio":[],"video":[],"images":[]})");
   for (;;)
     {
       auto res = indexer.scan (path);
@@ -28,6 +33,11 @@ fsindexer_worker (MediaServer &server, const std::filesystem::path &path,
        */
       server.setData (
           j.dump (-1, ' ', false, nlohmann::json::error_handler_t::replace));
+      /*
+       *  Спим только когда совершили сканирование, то есть фактический
+       *  интервал между сканирования будет состоять из времени сканирование
+       *  + переменной interval;
+       */
       std::this_thread::sleep_for (std::chrono::seconds (interval));
     }
 }
@@ -80,15 +90,21 @@ main (int argc, char **argv)
         }
     }
 
-  if (!std::filesystem::exists (path))
+  if (!std::filesystem::exists (path) || !std::filesystem::is_directory (path))
     {
       std::cerr << "Invalid path:" << path << std::endl;
       return -1;
     }
 
+  if (interval <= 0)
+    {
+      std::cerr << "Interval must be a positive number" << std::endl;
+      return -1;
+    }
+
   std::thread worker (fsindexer_worker, std::ref (server), path, interval);
   worker.detach ();
-  server.run ("0.0.0.0", 1234);
+  server.run ("127.0.0.1", 1234);
 
   return 0;
 }

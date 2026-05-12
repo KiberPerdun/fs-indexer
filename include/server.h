@@ -8,13 +8,14 @@
 #include "httplib.h"
 #include <cstdint>
 #include <mutex>
+#include <string>
 
 class MediaServer
 {
   private:
   httplib::Server svr;
   std::mutex mtx;
-  std::string data;
+  std::string data = R"({"audio":[],"video":[],"images":[]})";
 
   public:
   void
